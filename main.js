@@ -10,7 +10,7 @@ function writeCode(prefix, code, fn) {
             window.clearInterval(id)
             fn.call()
         }
-    }, 30)
+    }, 40)
 }
 
 var result = `
@@ -22,12 +22,13 @@ var result = `
  * 白色背景太单调了，我们来点背景
  */
 html{
-    background: rgb(222,222,222);
+    color: rgb(222,222,222); 
+    background: rgb(0,43,54);
     font-size: 16px;
 }
 /* 代码离边框太近了 */
 #code{
-    border: 1px solid white;
+    border: 1px solid #aaa;
     padding: 16px;
 }
 /* 我需要一点代码高亮 */
@@ -40,28 +41,19 @@ html{
 .token.function{
     color: #DD4A68;
 }
-/*我需要一张白纸*/
+/* 加一个呼吸效果 */
 #code{
-    position: fixed;
-    left: 0;
-    width: 50%;
-    height: 100%
+  animation: breath 0.5s infinite alternate-reverse;
 }
-#paper{
-    position: fixed;
-    right: 0;
-    width: 50%;
-    height: 100%;
-    background: black;
-    padding: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+
+/* 我需要一张白纸 */
+.code-wrapper{
+width: 50%;
+position: fixed;
+height: 100%;
 }
-#paper > .content{
-    background: white;
-    height: 100%;
-    width: 100%;
+#paper {
+display: block;
 }
 `
 function createPaper(fn) {
@@ -69,6 +61,7 @@ function createPaper(fn) {
     paper.id = 'paper'
     var content = document.createElement('pre')
     content.className = 'content'
+    content.id = 'content'
     paper.appendChild(content)
     document.body.appendChild(paper)
     fn.call()
@@ -85,12 +78,12 @@ function writeMarkdown(markdown, fn) {
             window.clearInterval(id)
             fn.call()
         }
-    }, 30)
+    }, 50)
 
 
 }
 
-var result2 = `#paper{}`
+var result2 = `/* 于是，我可以在白纸上写字了，请看右边 */`
 
 var md = `
 # 自我介绍
@@ -101,44 +94,72 @@ var md = `
 自学前端半年
 希望应聘前端开发岗位
 
-#技能介绍
+# 技能介绍
 
 熟悉JavaScript CSS
 
-#项目介绍
+# 项目介绍
 
 1.xxxx
 2.xxxx
 3.xxxx
 
-#联系方式
-手机：18048818135
-邮箱：455908283@qq.com
+# 联系方式
+* 手机：18048818135
+* 邮箱：455908283@qq.com
 `
 
 writeCode('', result, () => {
     createPaper(() => {
         writeCode(result, result2, () => {
-            writeMarkdown(md)
+            writeMarkdown(md, () => {
+
+                writeCode(result + result2, result3, () => {
+                    MarkdownToHtml(md, () => {
+                        writeCode(result + result2 + result3, result4, () => {
+                            console.log('完成')
+                        })
+                    })
+                })
+            })
         })
     })
 })
 
-
-
-
-/*
-function fn3(preResult) {
-    var result = `#paper{width:100px; height:100px; background: red;}`
-    var n = 0
-    var id = setInterval(() => {
-        n += 1
-        //code.innerHTML = preResult + result.substring(0, n)
-        code.innerHTML = Prism.highlight(preResult + result.substring(0, n), Prism.languages.css, 'css');
-        styleTag.innerHTML = preResult + result.substring(0, n)
-        if (n >= result.length) {
-            window.clearInterval(id)
-        }
-    }, 30)
+function MarkdownToHtml(markdown, fn) {
+    document.getElementById('content').innerHTML = marked(markdown);
+    fn.call()
 }
+
+var result3 = `
+/* 这个简历好像还差点什么
+ * 用开源工具把Markdown格式翻译成HTML格式
+*/ 
+`
+var result4 = `
+/* 最后给HTML加一点样式 */
+#paper>.content {
+    overflow: auto;
+}
+#paper>.content h1{
+    display: inline-block;
+    border-bottom: 1px solid;
+    margin: 1em 0 .5em;
+}
+#paper>.content li{
+    padding: .5em;
+    background: #ddd;
+}
+
+/* 感谢观看
+ * 感谢观看
+ * 感谢观看
 */
+
+.code-wrapper{
+    width: 30%;
+}
+#paper{
+    width: 70%;
+}
+`

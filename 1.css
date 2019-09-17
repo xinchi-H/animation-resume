@@ -9,6 +9,39 @@
     color: black;
 }
 #code{
-    height: 100vh;
+    left: 0;
+    width: 100%;
+    overflow: auto;
+}
+.code-wrapper{
+    padding: 16px;height: 100vh;display: flex;
+    
+}
+@keyframes breath{
+    0%{
+      box-shadow: 0 0 10px rgba(170,170,170,1)
+    }
+    100%{
+      box-shadow: 0 0 10px rgba(170,170,170,0.2)
+    }
+}
+#paper{
+    color: #000;
+    position: fixed;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    background: rgb(0,43,54);
+    padding: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;display: none;
+}
+#paper > .content{
+    padding: 20px;
+    background: white;
+    height: 100%;
+    width: 100%;  
     overflow: hidden;
+    
 }
